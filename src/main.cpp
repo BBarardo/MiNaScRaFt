@@ -24,6 +24,9 @@
 #include <camera.h>
 #include <stb_image.h>
 
+#include "Chunk.h"
+#include "Cube.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -90,88 +93,30 @@ int main()
 	// ------------------------------------
 	Shader shader("shaders/shader.vs", "shaders/shader.fs");
 
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	float vertices[] = {
-		// positions			 // normals					// texture coords
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
-	};
-
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
-
+	//----------------------------------------------
 	// first, configure the cube's VAO (and VBO)
 	unsigned int VBO, cubeVAO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &VBO);
-
+	
 	//bind do VBO para o seu prenchimento
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Cube::vertices), Cube::vertices, GL_STATIC_DRAW);
+	
 	//bind do VAO para o seu prenchimento
 	glBindVertexArray(cubeVAO);
-
+	
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
+	
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
+	
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
+	//-------------------------------------------------
+	
 	// load textures (we now use a utility function to keep the code more organized)
 	// -----------------------------------------------------------------------------
 	int dirt = loadTexture("textures/dirt.jpg");
@@ -181,6 +126,8 @@ int main()
 
 	shader.use();
 	shader.setInt("texture1", 0);
+
+	Chunk chunk(glm::vec3(0,0,0));
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -221,24 +168,54 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, dirt);
 		// render containers
 		glBindVertexArray(cubeVAO);
+
 		glm::vec3 position = glm::vec3(-1, 0, 0);
-		for (unsigned int z = 0; z <= 10; ++z) {
-			for (unsigned int x = 0; x <= 10; ++x) {
-				for (unsigned int y = 0; y <= 10; ++y) {
-					position = glm::vec3(x, y, z);
+		//glm::vec3 camPos = camera.Position;
+		//for ( int x = (int)camPos.x - 10 ; x < (int)camPos.x + 10 ; x++)
+		//{
+		//	for ( int z = (int)camPos.z - 10; z < (int)camPos.z + 10; z++)
+		//	{
+		//		std::cout << "x : " << x << " z : " << z << "\n";
+		//		position = glm::vec3(x, 0, z);
+		//
+		//		glm::mat4 model = glm::mat4(1.0f);
+		//		model = glm::translate(model, position);
+		//
+		//		shader.setMat4("model", model);
+		//
+		//
+		//		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//
+		//	}
+		//}
+		
+		//for (unsigned int z = 0; z <= 10; ++z) {
+		//	for (unsigned int x = 0; x <= 10; ++x) {
+		//		for (unsigned int y = 0; y <= 10; ++y) {
+		//			position = glm::vec3(x, y, z);
+		//
+		//			glm::mat4 model = glm::mat4(1.0f);
+		//			model = glm::translate(model, position);
+		//
+		//			shader.setMat4("model", model);
+		//
+		//
+		//			glDrawArrays(GL_TRIANGLES, 0, 36);
+		//
+		//		}
+		//	}
+		//}
 
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, position);
+		for (Cube cube : chunk.getCubes())
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cube.getPos());
 
-					shader.setMat4("model", model);
+			shader.setMat4("model", model);
 
 
-					glDrawArrays(GL_TRIANGLES, 0, 36);
-
-				}
-			}
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
