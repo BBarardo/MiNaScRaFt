@@ -17,7 +17,6 @@ public:
 	~Chunk();
 	std::vector<Cube> getCubes() const;
 	static std::unordered_set<int> existingChunks;
-	static int idCount;
 };
 
 #endif

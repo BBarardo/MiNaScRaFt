@@ -26,6 +26,7 @@
 
 #include "Chunk.h"
 #include "Cube.h"
+#include "Model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -87,7 +88,44 @@ int main()
 	glewInit();
 
 	//************************************************************
+	//--------------------DELETE-------------------------
 
+	float vertices[] = {
+		-0.5f,0.5f,-0.5f,   0.0f, 0.0f, 0.0f,//Point A 0
+		-0.5f,0.5f,0.5f,    0.0f, 0.0f, 1.0f,//Point B 1
+		0.5f,0.5f,-0.5f,    0.0f, 1.0f, 0.0f,//Point C 2
+		0.5f,0.5f,0.5f,     0.0f, 1.0f, 1.0f,//Point D 3
+
+		-0.5f,-0.5f,-0.5f,  1.0f, 0.0f, 0.0f,//Point E 4
+		-0.5f,-0.5f,0.5f,   1.0f, 0.0f, 1.0f,//Point F 5
+		0.5f,-0.5f,-0.5f,   1.0f, 1.0f, 0.0f,//Point G 6
+		0.5f,-0.5f,0.5f,    1.0f, 1.0f, 1.0f//Point H 7
+	};
+
+	unsigned int indices[] = {
+		/*Above ABC,BCD*/
+		0,1,2,
+		1,2,3,
+
+		/*Following EFG,FGH*/
+		4,5,6,
+		5,6,7,
+		/*Left ABF,AEF*/
+		0,1,5,
+		0,4,5,
+		/*Right side CDH,CGH*/
+		2,3,7,
+		2,6,7,
+		/*ACG,AEG*/
+		0,2,6,
+		0,4,6,
+		/*Behind BFH,BDH*/
+		1,5,7,
+		1,3,7
+	};
+
+	
+	//---------------------------------------------------
 
 	// build and compile our shader zprogram
 	// ------------------------------------
@@ -95,31 +133,69 @@ int main()
 
 	//----------------------------------------------
 	// first, configure the cube's VAO (and VBO)
-	unsigned int VBO, cubeVAO;
-	glGenVertexArrays(1, &cubeVAO);
-	glGenBuffers(1, &VBO);
+	//unsigned int VBO, cubeVAO;
+	//glGenVertexArrays(1, &cubeVAO);
+	//glGenBuffers(1, &VBO);
+	//
+	////bind do VBO para o seu prenchimento
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(Cube::vertices), Cube::vertices, GL_STATIC_DRAW);
+	//
+	////bind do VAO para o seu prenchimento
+	//glBindVertexArray(cubeVAO);
+	//
+	//// position attribute
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
+	//
+	//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	//glEnableVertexAttribArray(2);
+	//-------------------------------------------------
+
+	//first, configure the cube's VAO (and VBO)
+	unsigned int vVBO, tVBO, VAO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &vVBO);
+	glGenBuffers(1, &EBO);
+	glGenBuffers(1, &tVBO);
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(VAO);
 	
-	//bind do VBO para o seu prenchimento
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Cube::vertices), Cube::vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Cube::vertices2), Cube::vertices2, GL_STATIC_DRAW);
 	
-	//bind do VAO para o seu prenchimento
-	glBindVertexArray(cubeVAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Cube::indices), Cube::indices, GL_STATIC_DRAW);
 	
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, tVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Cube::textCords), Cube::textCords, GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-	//-------------------------------------------------
+	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
+	// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+	glBindVertexArray(0);
+	
+	//------------------------------------------
+
+	
+	//---------------------------------------------
 	// load textures (we now use a utility function to keep the code more organized)
 	// -----------------------------------------------------------------------------
-	int dirt = loadTexture("textures/dirt.jpg");
+	int dirt = loadTexture("textures/dirt.png");
 
 	// shader configuration
 	// --------------------
@@ -164,58 +240,29 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 		shader.setMat4("model", model);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dirt);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, dirt);
 		// render containers
-		glBindVertexArray(cubeVAO);
+		glBindVertexArray(VAO);
 
-		glm::vec3 position = glm::vec3(-1, 0, 0);
-		//glm::vec3 camPos = camera.Position;
-		//for ( int x = (int)camPos.x - 10 ; x < (int)camPos.x + 10 ; x++)
+
+		//glm::vec3 position = glm::vec3(-1, 0, 0);
+		//shader.setMat4("model", model);
+
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+		//for (Cube cube : chunk.getCubes())
 		//{
-		//	for ( int z = (int)camPos.z - 10; z < (int)camPos.z + 10; z++)
-		//	{
-		//		std::cout << "x : " << x << " z : " << z << "\n";
-		//		position = glm::vec3(x, 0, z);
+		//	glm::mat4 model = glm::mat4(1.0f);
+		//	model = glm::translate(model, cube.getPos());
 		//
-		//		glm::mat4 model = glm::mat4(1.0f);
-		//		model = glm::translate(model, position);
-		//
-		//		shader.setMat4("model", model);
+		//	shader.setMat4("model", model);
 		//
 		//
-		//		glDrawArrays(GL_TRIANGLES, 0, 36);
-		//
-		//	}
+		//	//glDrawArrays(GL_TRIANGLES, 0, 36);
+		//	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		//}
-		
-		//for (unsigned int z = 0; z <= 10; ++z) {
-		//	for (unsigned int x = 0; x <= 10; ++x) {
-		//		for (unsigned int y = 0; y <= 10; ++y) {
-		//			position = glm::vec3(x, y, z);
-		//
-		//			glm::mat4 model = glm::mat4(1.0f);
-		//			model = glm::translate(model, position);
-		//
-		//			shader.setMat4("model", model);
-		//
-		//
-		//			glDrawArrays(GL_TRIANGLES, 0, 36);
-		//
-		//		}
-		//	}
-		//}
-
-		for (Cube cube : chunk.getCubes())
-		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cube.getPos());
-
-			shader.setMat4("model", model);
-
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -225,8 +272,10 @@ int main()
 
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
-	glDeleteVertexArrays(1, &cubeVAO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1, &vVBO);
+	glDeleteBuffers(1, &tVBO);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
@@ -318,8 +367,8 @@ unsigned int loadTexture(char const* path)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		stbi_image_free(data);
 	}

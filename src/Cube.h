@@ -6,9 +6,10 @@ class Cube
 {
 public:
     static const float vertices[288];
+	
 	static const float vertices2[72];
 	static const float textCords[8];
-	static const float indices[36];
+	static const unsigned int indices[36];
 
 	explicit Cube(const glm::vec3& pos): pos(pos){}
 	~Cube();

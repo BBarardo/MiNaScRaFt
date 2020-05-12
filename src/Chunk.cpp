@@ -1,10 +1,8 @@
 ﻿#include "Chunk.h"
 
-int idCount = 0;
 
 Chunk::Chunk(glm::vec3 pos)
 {
-	this->id = idCount++;
 	this->pos = pos;
 	for (unsigned int z = 0; z < 16; ++z) {
 		for (unsigned int x = 0; x < 16; ++x) {
