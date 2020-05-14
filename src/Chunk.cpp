@@ -3,7 +3,6 @@
 
 Chunk::Chunk(glm::vec3 pos)
 {
-	this->pos = pos;
 	for (unsigned int z = 0; z < 16; ++z) {
 		for (unsigned int x = 0; x < 16; ++x) {
 			for (unsigned int y = 0; y < 16; ++y) {

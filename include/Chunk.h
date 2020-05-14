@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 #include <vector>  //for std::vector
+#include <unordered_map>
 
 #include "Cube.h"
 
@@ -16,7 +17,11 @@ public:
 	Chunk(glm::vec3 pos);
 	~Chunk();
 	std::vector<Cube> getCubes() const;
+
+
+
 	static std::unordered_set<int> existingChunks;
+	
 };
 
 #endif

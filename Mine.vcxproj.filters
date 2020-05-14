@@ -252,13 +252,31 @@
     <ClInclude Include="include\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Player.h">
+    <ClInclude Include="include\GLCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cube.h">
+    <ClInclude Include="include\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Chunk.h">
+    <ClInclude Include="include\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VertexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -287,20 +305,10 @@
     <None Include="External Libraries\assimp\include\assimp\vector3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="2.1.basic_lighting.fs" />
-    <None Include="2.1.basic_lighting.vs" />
-    <None Include="2.1.lamp.fs" />
-    <None Include="2.1.lamp.vs" />
+    <None Include="..\shader.vs" />
+    <None Include="..\shader.fs" />
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="container2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="container2_specular.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -313,6 +321,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Chunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
