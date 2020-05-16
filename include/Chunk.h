@@ -1,27 +1,36 @@
 ﻿#ifndef CHUNK_H
 #define CHUNK_H
 
-#include <unordered_set>
-#include <vector>  //for std::vector
-#include <unordered_map>
+#include <array>
+#include <vector>
+
 
 #include "Cube.h"
+#include "WorldConstants.h"
+#include "ChunkMesh.h"
+#include "ChunkMeshBuilder.h"
 
 class Chunk
 {
-private:
-	int id;
+
 	glm::vec3 pos;
 	std::vector<Cube> cubes;
+	ChunkMesh mesh;
+	
+	int getIndex(int x, int y, int z);
+	bool checkBounds(int val);
+	
 public:
+	Chunk();
 	Chunk(glm::vec3 pos);
 	~Chunk();
-	std::vector<Cube> getCubes() const;
-
-
-
-	static std::unordered_set<int> existingChunks;
 	
+	Cube getCube(int x, int y, int z);
+	ChunkMesh getMesh() const;
+	void setCube(int x, int y, int z, Cube cube);
+	glm::vec3 getPos() const;
+	
+
 };
 
 #endif

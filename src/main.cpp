@@ -37,26 +37,14 @@ int main()
 	// -----------------------------------------------------------------------------
 	int dirt = loadTexture("textures/dirt.png");
 
-	// shader configuration
-	// --------------------
 
-	//shader.use();
-	//shader.setInt("texture1", 0);
 
 	Chunk chunk(glm::vec3(0,0,0));
+
+	Renderer renderer = Renderer();
+	
 	// render loop
 	// -----------
-
-
-	Model cube(
-		Cube::vertices2,sizeof(Cube::vertices2),
-Cube::textCords, sizeof(Cube::textCords),
-		Cube::indices, 36
-	);
-	Renderer renderer = Renderer();
-
-
-	
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
@@ -79,13 +67,16 @@ Cube::textCords, sizeof(Cube::textCords),
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
 
-		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, dirt);
+		
 
+
+		renderer.addChunkMesh(chunk.getMesh());
 		renderer.setMatrix(projection,view,model);
 
-		renderer.draw(cube);
+		renderer.render(camera);
+		//renderer.draw(chunk.getMesh().getModel());
 
 
 
@@ -111,11 +102,6 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	float cameraSpeed = 3.0f * deltaTime;
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		cameraSpeed = 6.0f * deltaTime;
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -124,6 +110,10 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		camera.ProcessKeyboard(UP, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
