@@ -8,7 +8,8 @@ Renderer::~Renderer() { }
 
 void Renderer::addChunkMesh(const ChunkMesh& mesh)
 {
-	r_chunks.push_back(&mesh);
+	const ChunkMesh& chMesh = mesh;
+	r_chunks.push_back(&chMesh);
 }
 
 void Renderer::render(const Camera& camera)
@@ -30,7 +31,7 @@ void Renderer::render(const Camera& camera)
 		std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
 	}
 
-	r_chunks.clear();
+	//r_chunks.clear();
 }
 
 //void Renderer::draw(Model model)

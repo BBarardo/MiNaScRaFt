@@ -311,8 +311,6 @@
     <None Include="External Libraries\assimp\include\assimp\vector3.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="..\shader.vs" />
-    <None Include="..\shader.fs" />
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
   </ItemGroup>

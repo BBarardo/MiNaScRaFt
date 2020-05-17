@@ -255,8 +255,6 @@
     <ClInclude Include="include\WorldConstants.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shader.fs" />
-    <None Include="..\shader.vs" />
     <None Include="External Libraries\assimp\include\assimp\color4.inl" />
     <None Include="External Libraries\assimp\include\assimp\material.inl" />
     <None Include="External Libraries\assimp\include\assimp\matrix3x3.inl" />

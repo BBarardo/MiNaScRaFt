@@ -59,15 +59,29 @@ int main()
 		}
 	}
 
-	for (const Chunk chunk : chunks)
+	for (auto && chunk : chunks)
 	{
 		renderer.addChunkMesh(chunk.getMesh());
 	}
-	/*
-	for (int i = 0 ; i < chunks.size() ; i++)
-	{
-		renderer.addChunkMesh(chunks[i].getMesh());
-	}*/
+	
+	//for (int i = 0; i < chunks.size(); i++)
+	//{
+	//	//auto chMesh = (ChunkMesh *) malloc(sizeof(ChunkMesh));
+	//	//chMesh = &chunks.at(i).getMesh();
+	//	//renderer.r_chunks.push_back(chMesh);
+	//	renderer.addChunkMesh(chunks.at(i).getMesh());
+	//}
+	
+	//renderer.addChunkMesh(chunks.at(0).getMesh());
+	//renderer.addChunkMesh(chunks.at(1).getMesh());
+	//renderer.addChunkMesh(chunks.at(2).getMesh());
+	//renderer.addChunkMesh(chunks.at(3).getMesh());
+	
+	
+	//for (int i = 0 ; i < chunks.size() ; i++)
+	//{
+	//	renderer.addChunkMesh(chunks[i].getMesh());
+	//}
 
 	// render loop
 	// -----------
