@@ -1,11 +1,3 @@
-//
-//  GLCore.h
-//  POOopengl
-//
-//  Created by Nuno Garcia on 13/05/2020.
-//  Copyright © 2020 Nuno Garcia. All rights reserved.
-//
-
 #ifndef GLCore_h
 #define GLCore_h
 
@@ -22,6 +14,7 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 
 #include <Shader.hpp>
 #include <camera.h>
@@ -32,4 +25,4 @@
 #include "Renderer.h"
 
 
-#endif /* GLCore_h */
+#endif

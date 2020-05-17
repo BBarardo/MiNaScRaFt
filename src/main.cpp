@@ -39,10 +39,36 @@ int main()
 
 
 
-	Chunk chunk(glm::vec3(0,0,0));
+	//Chunk chunk1(glm::vec3(0, 0, 0));
+	//Chunk chunk2(glm::vec3(1,0,0));
 
 	Renderer renderer = Renderer();
-	
+
+	//renderer.addChunkMesh(chunk1.getMesh());
+	//renderer.addChunkMesh(chunk2.getMesh());
+
+	std::vector<Chunk> chunks;
+	int lado = 2;
+	for (int x = 0; x < lado; ++x)
+	{
+		for (int z = 0; z < lado; ++z)
+		{
+			Chunk chunk(glm::vec3(x, 0, z));
+			
+			chunks.push_back(chunk);
+		}
+	}
+
+	for (const Chunk chunk : chunks)
+	{
+		renderer.addChunkMesh(chunk.getMesh());
+	}
+	/*
+	for (int i = 0 ; i < chunks.size() ; i++)
+	{
+		renderer.addChunkMesh(chunks[i].getMesh());
+	}*/
+
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -72,7 +98,6 @@ int main()
 		
 
 
-		renderer.addChunkMesh(chunk.getMesh());
 		renderer.setMatrix(projection,view,model);
 
 		renderer.render(camera);
