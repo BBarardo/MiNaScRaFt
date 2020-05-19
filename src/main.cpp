@@ -1,7 +1,3 @@
-// http://www.opengl-tutorial.org/
-// https://learnopengl.com/Getting-started/Hello-Triangle
-// https://open.gl/drawing
-
 #include <GLCore.h>
 
 
@@ -37,21 +33,14 @@ int main()
 	// -----------------------------------------------------------------------------
 	int dirt = loadTexture("textures/dirt.png");
 
-
-
-	//Chunk chunk1(glm::vec3(0, 0, 0));
-	//Chunk chunk2(glm::vec3(1,0,0));
-
+	
 	Renderer renderer = Renderer();
 
-	//renderer.addChunkMesh(chunk1.getMesh());
-	//renderer.addChunkMesh(chunk2.getMesh());
-
 	std::vector<Chunk> chunks;
-	int lado = 2;
-	for (int x = 0; x < lado; ++x)
+	const int from = -2, to = 2;
+	for (int x = from; x < to; ++x)
 	{
-		for (int z = 0; z < lado; ++z)
+		for (int z = from; z < to; ++z)
 		{
 			Chunk chunk(glm::vec3(x, 0, z));
 			
@@ -61,27 +50,9 @@ int main()
 
 	for (auto && chunk : chunks)
 	{
-		renderer.addChunkMesh(chunk.getMesh());
+		const ChunkMesh* temp_mesh = new ChunkMesh(chunk.getMesh());
+		renderer.r_chunks.push_back(temp_mesh);
 	}
-	
-	//for (int i = 0; i < chunks.size(); i++)
-	//{
-	//	//auto chMesh = (ChunkMesh *) malloc(sizeof(ChunkMesh));
-	//	//chMesh = &chunks.at(i).getMesh();
-	//	//renderer.r_chunks.push_back(chMesh);
-	//	renderer.addChunkMesh(chunks.at(i).getMesh());
-	//}
-	
-	//renderer.addChunkMesh(chunks.at(0).getMesh());
-	//renderer.addChunkMesh(chunks.at(1).getMesh());
-	//renderer.addChunkMesh(chunks.at(2).getMesh());
-	//renderer.addChunkMesh(chunks.at(3).getMesh());
-	
-	
-	//for (int i = 0 ; i < chunks.size() ; i++)
-	//{
-	//	renderer.addChunkMesh(chunks[i].getMesh());
-	//}
 
 	// render loop
 	// -----------
@@ -115,9 +86,6 @@ int main()
 		renderer.setMatrix(projection,view,model);
 
 		renderer.render(camera);
-		//renderer.draw(chunk.getMesh().getModel());
-
-
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

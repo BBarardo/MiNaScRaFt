@@ -6,48 +6,49 @@ Renderer::Renderer() : r_shader("shaders/shader.vs", "shaders/shader.fs") { }
 
 Renderer::~Renderer() { }
 
-void Renderer::addChunkMesh(const ChunkMesh& mesh)
-{
-	const ChunkMesh& chMesh = mesh;
-	r_chunks.push_back(&chMesh);
-}
+//void Renderer::addChunkMesh(const ChunkMesh& mesh)
+//{
+//	//const ChunkMesh& chMesh = mesh;
+//	r_chunks.push_back(&mesh);
+//}
 
 void Renderer::render(const Camera& camera)
 {
 	r_shader.use();
 	//glEnable(GL_CULL_FACE);
-	
-	//BlockDatabase::get().textureAtlas.bindTexture();
-
-	//r_shader.loadProjectionViewMatrix(camera.getProjectionViewMatrix());
-	
-	for (const ChunkMesh* mesh : r_chunks)
-	{
-		const ChunkMesh& m = *mesh;
-
-		
-		m.getModel().bindVAO();
-		glDrawElements(GL_TRIANGLES, m.getModel().get_i_count(), GL_UNSIGNED_INT, nullptr);
-		std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
-	}
-
+    
+    //BlockDatabase::get().textureAtlas.bindTexture();
+    
+    //r_shader.loadProjectionViewMatrix(camera.getProjectionViewMatrix());
+    
+    for (const ChunkMesh* mesh : r_chunks)
+    {
+    	const ChunkMesh& m = *mesh;
+    
+    	
+    	m.getModel().bindVAO();
+    	glDrawElements(GL_TRIANGLES, m.getModel().get_i_count(), GL_UNSIGNED_INT, nullptr);
+    	std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
+    }
+    
 	//r_chunks.clear();
 }
 
-//void Renderer::draw(Model model)
-//{
-//	this->r_shader.use();
-//	
-//	glBindVertexArray(model.vao());
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.ebo());
-//	//std::cout << "[RENDERER::draw]:: " << glGetError() << "\n";
-//	
-//	
-//	//GLCall(
-//		glDrawElements(GL_TRIANGLES, model.get_i_count(), GL_UNSIGNED_INT, 0);
-//		std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
-//	//);
-//}
+void Renderer::draw(Model model)
+{
+	this->r_shader.use();
+	
+	//glBindVertexArray(model.vao());
+	model.bindVAO();
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.ebo());
+	//std::cout << "[RENDERER::draw]:: " << glGetError() << "\n";
+	
+	
+	//GLCall(
+		glDrawElements(GL_TRIANGLES, model.get_i_count(), GL_UNSIGNED_INT, 0);
+		std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
+	//);
+}
 
 void Renderer::setMatrix(glm::mat4 projection, glm::mat4 view, glm::mat4 model) const
 {
