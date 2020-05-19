@@ -7,11 +7,18 @@ Chunk::Chunk()
 Chunk::Chunk(glm::vec3 pos)
 {
 	this->pos = pos;
-	for (unsigned int z = 0; z < CHUNK_SIZE; ++z) {
-		for (unsigned int x = 0; x < CHUNK_SIZE; ++x) {
-			for (unsigned int y = 0; y < CHUNK_SIZE; ++y) {
-				Cube cube(glm::vec3(x, y, z), CubeType::dirt);
-				cubes.push_back(cube);
+	for (unsigned int y = 0; y < CHUNK_SIZE; ++y) {
+		for (unsigned int z = 0; z < CHUNK_SIZE; ++z) {
+			for (unsigned int x = 0; x < CHUNK_SIZE; ++x) {
+				if(y < 4)
+				{
+					Cube cube(glm::vec3(x, y, z), CubeType::stone);
+					cubes.push_back(cube);
+				}else
+				{
+					Cube cube(glm::vec3(x, y, z), CubeType::dirt);
+					cubes.push_back(cube);
+				}
 			}
 		}
 	}

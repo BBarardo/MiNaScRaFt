@@ -13,7 +13,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -31,7 +31,7 @@ int main()
 	//---------------------------------------------
 	// load textures (we now use a utility function to keep the code more organized)
 	// -----------------------------------------------------------------------------
-	int dirt = loadTexture("textures/dirt.png");
+	int dirt = loadTexture("textures/textures.png");
 
 	
 	Renderer renderer = Renderer();
@@ -84,7 +84,8 @@ int main()
 
 
 		renderer.setMatrix(projection,view,model);
-
+		std::cout << "x-" << camera.Position.x
+			<< ", y-" << camera.Position.y << ", z-" << camera.Position.z <<"\n";
 		renderer.render(camera);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -121,6 +122,10 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(UP, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		camera.ProcessKeyboard(DOWN, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -182,8 +187,8 @@ unsigned int loadTexture(char const* path)
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		// set texture filtering parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

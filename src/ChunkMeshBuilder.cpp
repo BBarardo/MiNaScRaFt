@@ -49,11 +49,18 @@ const std::vector<float> ChunkMeshBuilder::bottomFace
 	0, 0, 1
 };
 
-const std::vector<float> ChunkMeshBuilder::textCoords
+const std::vector<float> ChunkMeshBuilder::textCoordsDirt
 {
-	1, 1,
-	0, 1,
 	0, 0,
+	0, 1,
+	0.5, 1,
+	0.5, 0
+};
+const std::vector<float> ChunkMeshBuilder::textCoordsStone
+{
+	0.5, 0,
+	0.5, 1,
+	1, 1,
 	1, 0
 };
 
@@ -92,31 +99,40 @@ void ChunkMeshBuilder::build(ChunkMesh& mesh)
 	AdjacentBlockPositions adjacent_blocks;
 
 	for (unsigned int y = 0; y < CHUNK_SIZE; ++y)
-	for (unsigned int x = 0; x < CHUNK_SIZE; ++x)
-	for (unsigned int z = 0; z < CHUNK_SIZE; ++z)
-	{
-		glm::vec3 position(x, y, z);
-		Cube cube = b_chunk->getCube(x, y, z);
+		for (unsigned int x = 0; x < CHUNK_SIZE; ++x)
+			for (unsigned int z = 0; z < CHUNK_SIZE; ++z)
+			{
+				glm::vec3 position(x, y, z);
+				Cube cube = b_chunk->getCube(x, y, z);
+				CubeType cubeType = cube.getType();
+				
+				if (cubeType == CubeType::air)
+					continue;
 
-		if (cube.getType() == CubeType::air)
-			continue;
+				adjacent_blocks.update(x, y, z);
+				
+				std::vector<float> textCorrds;
+				if(cubeType == CubeType::stone)
+				{
+					textCorrds = textCoordsStone;
+				}else /*if(cube.getType() == CubeType::dirt)*/
+				{
+					textCorrds = textCoordsDirt;
+				}
+				//Up/ Down
+				tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
+				tryAddFaceToMesh(topFace, textCorrds, position, adjacent_blocks.up);
 
-		adjacent_blocks.update(x, y, z);
+				//Left/ Right
+				tryAddFaceToMesh(leftFace, textCorrds, position, adjacent_blocks.left);
+				tryAddFaceToMesh(rightFace, textCorrds, position, adjacent_blocks.right);
 
-		//Up/ Down
-		tryAddFaceToMesh(bottomFace, textCoords, position, adjacent_blocks.down);
-		tryAddFaceToMesh(topFace, textCoords, position, adjacent_blocks.up);
-
-		//Left/ Right
-		tryAddFaceToMesh(leftFace, textCoords, position, adjacent_blocks.left);
-		tryAddFaceToMesh(rightFace, textCoords, position, adjacent_blocks.right);
-
-		//Front/ Back
-		tryAddFaceToMesh(frontFace, textCoords, position, adjacent_blocks.front);
-		tryAddFaceToMesh(backFace, textCoords, position, adjacent_blocks.back);
+				//Front/ Back
+				tryAddFaceToMesh(frontFace, textCorrds, position, adjacent_blocks.front);
+				tryAddFaceToMesh(backFace, textCorrds, position, adjacent_blocks.back);
 
 
-	}
+			}
 }
 
 void ChunkMeshBuilder::tryAddFaceToMesh(const std::vector<float>& blockFace,
@@ -137,7 +153,6 @@ void ChunkMeshBuilder::tryAddFaceToMesh(const std::vector<float>& blockFace,
 bool ChunkMeshBuilder::shouldMakeFace(const glm::vec3& adjBlock)
 {
 	auto block = b_chunk->getCube(adjBlock.x, adjBlock.y, adjBlock.z);
-	//auto& data  = block.getData();
 
 	if (block.getType() == CubeType::air)
 	{

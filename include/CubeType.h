@@ -4,7 +4,8 @@
 enum class CubeType
 {
 	air,
-	dirt
+	dirt,
+	stone
 };
 
 
