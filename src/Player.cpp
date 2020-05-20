@@ -6,7 +6,9 @@
 
 
 
-Player::Player(Camera& camera, glm::vec3 pos) :camera(&camera), pos(pos)
+Player::Player(Camera& camera, glm::vec3 pos)
+	:camera(&camera),
+	pos(pos)
 {
 }
 
@@ -42,7 +44,7 @@ void Player::move(Camera_Movement direction, float deltaTime)
 	}
 	if (direction == UP)
 		jump();
-	
+
 	std::cout << "player: " << pos.x << ", " << pos.y << ", " << pos.z << "\n";
 	std::cout << "camera::front: " << front.x << ", " << front.y << ", " << front.z << "\n";
 
@@ -50,7 +52,7 @@ void Player::move(Camera_Movement direction, float deltaTime)
 
 void Player::jump()
 {
-	if(!jumping)
+	if (!jumping)
 	{
 		velocityY = 5.5;
 		pos.y += 1;
@@ -62,11 +64,12 @@ void Player::update(float deltaTime)
 {
 
 	//gravidade
-	if(pos.y > 0 && jumping)
+	if ((pos.y > 0 && jumping) || !world->isChunk(pos.x, pos.z))
 	{
 		velocityY -= 0.5;
 		pos.y += velocityY * deltaTime;
-	}else
+	}
+	else
 	{
 		jumping = false;
 	}
@@ -76,4 +79,14 @@ void Player::update(float deltaTime)
 	camera->Position.y = this->pos.y + 2;
 	camera->Position.z = this->pos.z;
 	std::cout << "velocityY: " << velocityY << "\n";
+
+	if(pos.y < -100)
+	{
+		pos = glm::vec3(0);
+	}
+}
+
+void Player::set_world(World& world)
+{
+	this->world = &world;
 }

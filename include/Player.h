@@ -2,18 +2,19 @@
 #define PLAYER_H
 
 #include <camera.h>
+#include "World.h"
+
+class World;
 
 class Player
 {
 	glm::vec3 pos;
 	Camera* camera;
 	const float MovementSpeed = 7.5;
-	float gravity = 5.5;
-	float accelerationY;
-	float newForce = gravity + accelerationY;
 	float velocityY = 0;
-
 	bool jumping;
+
+	World* world;
 
 	void jump();
 	
@@ -23,6 +24,8 @@ public:
 	~Player();
 	void move(Camera_Movement direction, float deltaTime);
 	void update(float deltaTime);
+
+	void set_world(World& world);
 };
 
 #endif
