@@ -4,15 +4,14 @@
 #include <array>
 #include <vector>
 
-
 #include "Cube.h"
 #include "WorldConstants.h"
 #include "ChunkMesh.h"
 #include "ChunkMeshBuilder.h"
 
+
 class Chunk
 {
-
 	glm::vec3 pos;
 	std::vector<Cube> cubes;
 	ChunkMesh mesh;

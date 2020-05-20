@@ -24,6 +24,7 @@
 #include "Cube.h"
 #include "Model.hpp"
 #include "Renderer.h"
+#include "World.h"
 
 
 #endif

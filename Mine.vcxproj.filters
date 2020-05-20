@@ -285,6 +285,9 @@
     <ClInclude Include="include\ChunkMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="External Libraries\assimp\include\assimp\color4.inl">
@@ -313,6 +316,8 @@
     </None>
     <None Include="shaders\shader.fs" />
     <None Include="shaders\shader.vs" />
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -337,6 +342,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ChunkMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
