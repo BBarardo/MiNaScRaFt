@@ -113,6 +113,7 @@ int main()
 	unsigned int cubemapTexture = loadCubemap(faces);
 	Renderer renderer = Renderer();
 	World world = World(2);
+	player.set_world(world);
 
 	std::vector<Chunk> chunks = world.getChunks();
 	const int from = -3, to = 3;

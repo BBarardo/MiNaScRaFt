@@ -22,7 +22,7 @@ public:
 
 	Chunk getChunk(int x, int y, int z);
 	void setChunk(int x, int y, int z, Chunk chunk);
-
+	bool isChunk(int x, int z);
 
 };
 

@@ -38,6 +38,20 @@ void World::setChunk(int x, int y, int z, Chunk chunk)
 	chunks[getIndex(x, y, z)] = chunk;
 }
 
+bool World::isChunk(int x, int z)
+{
+	x /= CHUNK_SIZE;
+	z /= CHUNK_SIZE;
+	for (auto && chunk : chunks)
+	{
+		if (chunk.getPos().x == x && chunk.getPos().z == z)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 int World::getIndex(int x, int y, int z)
 {
 	return  y * CHUNK_AREA + z * CHUNK_SIZE + x;
