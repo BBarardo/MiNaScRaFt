@@ -21,6 +21,7 @@ class ChunkMeshBuilder
 	static const std::vector<float> bottomFace;
 	static const std::vector<float> textCoordsDirt;
 	static const std::vector<float> textCoordsStone;
+	static const std::vector<float> textCoordsGrass;
 	
 	Chunk * b_chunk = nullptr;
 	ChunkMesh * b_mesh = nullptr;

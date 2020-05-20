@@ -53,13 +53,20 @@ const std::vector<float> ChunkMeshBuilder::textCoordsDirt
 {
 	0, 0,
 	0, 1,
-	0.5, 1,
-	0.5, 0
+	0.33333, 1,
+	0.33333, 0
 };
 const std::vector<float> ChunkMeshBuilder::textCoordsStone
 {
-	0.5, 0,
-	0.5, 1,
+	0.33333, 0,
+	0.33333, 1,
+	0.66667, 1,
+	0.66667, 0
+};
+const std::vector<float> ChunkMeshBuilder::textCoordsGrass
+{
+	0.66667, 0,
+	0.66667, 1,
 	1, 1,
 	1, 0
 };
@@ -115,13 +122,29 @@ void ChunkMeshBuilder::build(ChunkMesh& mesh)
 				if(cubeType == CubeType::stone)
 				{
 					textCorrds = textCoordsStone;
-				}else /*if(cube.getType() == CubeType::dirt)*/
+				}else if(cubeType == CubeType::dirt)
 				{
 					textCorrds = textCoordsDirt;
+				}else if (cubeType == CubeType::grass)
+				{
+					textCorrds = textCoordsDirt;
+					//Up/ Down
+					tryAddFaceToMesh(topFace, textCoordsGrass, position, adjacent_blocks.up);
+					tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
+
+					//Left/ Right
+					tryAddFaceToMesh(leftFace, textCorrds, position, adjacent_blocks.left);
+					tryAddFaceToMesh(rightFace, textCorrds, position, adjacent_blocks.right);
+
+					//Front/ Back
+					tryAddFaceToMesh(frontFace, textCorrds, position, adjacent_blocks.front);
+					tryAddFaceToMesh(backFace, textCorrds, position, adjacent_blocks.back);
+					
+					continue;
 				}
 				//Up/ Down
-				tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
 				tryAddFaceToMesh(topFace, textCorrds, position, adjacent_blocks.up);
+				tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
 
 				//Left/ Right
 				tryAddFaceToMesh(leftFace, textCorrds, position, adjacent_blocks.left);

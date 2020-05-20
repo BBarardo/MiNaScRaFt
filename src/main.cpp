@@ -84,8 +84,8 @@ int main()
 
 
 		renderer.setMatrix(projection,view,model);
-		std::cout << "x-" << camera.Position.x
-			<< ", y-" << camera.Position.y << ", z-" << camera.Position.z <<"\n";
+		//std::cout << "x-" << camera.Position.x
+		//	<< ", y-" << camera.Position.y << ", z-" << camera.Position.z <<"\n";
 		renderer.render(camera);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -187,8 +187,8 @@ unsigned int loadTexture(char const* path)
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		// set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		// set texture filtering parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -216,7 +216,7 @@ GLFWwindow* initOpenGL() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // use modern openGL
 
 	// Open a window and create its OpenGL context
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "transf", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MiNaScRaFt", NULL, NULL);
 
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

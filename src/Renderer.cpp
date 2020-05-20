@@ -28,7 +28,7 @@ void Renderer::render(const Camera& camera)
     	
     	m.getModel().bindVAO();
     	glDrawElements(GL_TRIANGLES, m.getModel().get_i_count(), GL_UNSIGNED_INT, nullptr);
-    	//std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
+    	std::cout << "[RENDERER::render]:: " << glGetError() << "\n";
     }
     
 	//r_chunks.clear();
