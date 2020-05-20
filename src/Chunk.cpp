@@ -11,7 +11,7 @@ Chunk::Chunk(glm::vec3 pos)
 		for (unsigned int z = 0; z < CHUNK_SIZE; ++z) {
 			for (unsigned int x = 0; x < CHUNK_SIZE; ++x) {
 
-				if(y == CHUNK_SIZE -1 ){
+				if(y == CHUNK_SIZE - 1){
 					Cube cube(glm::vec3(x, y, z), CubeType::grass);
 					cubes.push_back(cube);
 				}

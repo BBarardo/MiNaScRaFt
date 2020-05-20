@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\ChunkMesh.cpp" />
     <ClCompile Include="src\ChunkMeshBuilder.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
@@ -252,9 +253,12 @@
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Shader.hpp" />
     <ClInclude Include="include\stb_image.h" />
+    <ClInclude Include="include\World.h" />
     <ClInclude Include="include\WorldConstants.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="External Libraries\assimp\include\assimp\color4.inl" />
     <None Include="External Libraries\assimp\include\assimp\material.inl" />
     <None Include="External Libraries\assimp\include\assimp\matrix3x3.inl" />
