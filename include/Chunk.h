@@ -4,7 +4,6 @@
 #include <array>
 #include <vector>
 
-#include "World.h"
 #include "Cube.h"
 #include "WorldConstants.h"
 #include "ChunkMesh.h"
@@ -24,8 +23,6 @@ public:
 	Chunk();
 	Chunk(glm::vec3 pos);
 	~Chunk();
-	
-	static World* world;
 	
 	Cube getCube(int x, int y, int z);
 	ChunkMesh getMesh() const;

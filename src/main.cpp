@@ -34,7 +34,6 @@ int main()
 	
 	Renderer renderer = Renderer();
 	World world = World(4);
-	Chunk::world = &world;
 	
 
 	std::vector<Chunk> chunks = world.getChunks();
