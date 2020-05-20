@@ -15,6 +15,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <Shader.hpp>
 #include <camera.h>
