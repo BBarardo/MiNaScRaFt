@@ -13,7 +13,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(0.0f, 2.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -21,8 +21,6 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f; // time between current frame and last frame
 float lastFrame = 0.0f;
-
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
@@ -35,18 +33,21 @@ int main()
 
 	
 	Renderer renderer = Renderer();
+	
+	World world = World(4);
+	
 
-	std::vector<Chunk> chunks;
-	const int from = -2, to = 2;
-	for (int x = from; x < to; ++x)
-	{
-		for (int z = from; z < to; ++z)
-		{
-			Chunk chunk(glm::vec3(x, 0, z));
-			
-			chunks.push_back(chunk);
-		}
-	}
+	std::vector<Chunk> chunks = world.getChunks();
+	const int from = -3, to = 3;
+	//for (int x = from; x < to; ++x)
+	//{
+	//	for (int z = from; z < to; ++z)
+	//	{
+	//		Chunk chunk(glm::vec3(x, -1, z));
+	//		
+	//		chunks.push_back(chunk);
+	//	}
+	//}
 
 	for (auto && chunk : chunks)
 	{
