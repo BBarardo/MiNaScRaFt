@@ -53,22 +53,29 @@ const std::vector<float> ChunkMeshBuilder::textCoordsDirt
 {
 	0, 0,
 	0, 1,
-	0.33333, 1,
-	0.33333, 0
+	0.25, 1,
+	0.25, 0
 };
 const std::vector<float> ChunkMeshBuilder::textCoordsStone
 {
-	0.33333, 0,
-	0.33333, 1,
-	0.66667, 1,
-	0.66667, 0
+	0.25, 0,
+	0.25, 1,
+	0.5, 1,
+	0.5, 0
 };
 const std::vector<float> ChunkMeshBuilder::textCoordsGrass
 {
-	0.66667, 0,
-	0.66667, 1,
-	1, 1,
-	1, 0
+	0.5, 0,
+	0.5, 1,
+	0.75, 1,
+	0.75, 0
+};
+const std::vector<float> ChunkMeshBuilder::textCoordsSideGrass
+{
+	0.75, 1,	//Top Left
+	1, 1,		//Top Right
+	1, 0,		//Bottom right
+	0.75, 0,	//Bottom left
 };
 
 struct AdjacentBlockPositions
@@ -118,43 +125,41 @@ void ChunkMeshBuilder::build(ChunkMesh& mesh)
 
 				adjacent_blocks.update(x, y, z);
 				
-				std::vector<float> textCorrds;
+				std::vector<float> textCoords;
 				if(cubeType == CubeType::stone)
 				{
-					textCorrds = textCoordsStone;
+					textCoords = textCoordsStone;
 				}else if(cubeType == CubeType::dirt)
 				{
-					textCorrds = textCoordsDirt;
+					textCoords = textCoordsDirt;
 				}else if (cubeType == CubeType::grass)
 				{
-					textCorrds = textCoordsDirt;
+					textCoords = textCoordsDirt;
 					//Up/ Down
 					tryAddFaceToMesh(topFace, textCoordsGrass, position, adjacent_blocks.up);
-					tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
+					tryAddFaceToMesh(bottomFace, textCoords, position, adjacent_blocks.down);
 
 					//Left/ Right
-					tryAddFaceToMesh(leftFace, textCorrds, position, adjacent_blocks.left);
-					tryAddFaceToMesh(rightFace, textCorrds, position, adjacent_blocks.right);
+					tryAddFaceToMesh(leftFace, textCoordsSideGrass, position, adjacent_blocks.left);
+					tryAddFaceToMesh(rightFace, textCoordsSideGrass, position, adjacent_blocks.right);
 
 					//Front/ Back
-					tryAddFaceToMesh(frontFace, textCorrds, position, adjacent_blocks.front);
-					tryAddFaceToMesh(backFace, textCorrds, position, adjacent_blocks.back);
-					
+					tryAddFaceToMesh(frontFace, textCoordsSideGrass, position, adjacent_blocks.front);
+					tryAddFaceToMesh(backFace, textCoordsSideGrass, position, adjacent_blocks.back);
+
 					continue;
 				}
 				//Up/ Down
-				tryAddFaceToMesh(topFace, textCorrds, position, adjacent_blocks.up);
-				tryAddFaceToMesh(bottomFace, textCorrds, position, adjacent_blocks.down);
+				tryAddFaceToMesh(topFace, textCoords, position, adjacent_blocks.up);
+				tryAddFaceToMesh(bottomFace, textCoords, position, adjacent_blocks.down);
 
 				//Left/ Right
-				tryAddFaceToMesh(leftFace, textCorrds, position, adjacent_blocks.left);
-				tryAddFaceToMesh(rightFace, textCorrds, position, adjacent_blocks.right);
+				tryAddFaceToMesh(leftFace, textCoords, position, adjacent_blocks.left);
+				tryAddFaceToMesh(rightFace, textCoords, position, adjacent_blocks.right);
 
 				//Front/ Back
-				tryAddFaceToMesh(frontFace, textCorrds, position, adjacent_blocks.front);
-				tryAddFaceToMesh(backFace, textCorrds, position, adjacent_blocks.back);
-
-
+				tryAddFaceToMesh(frontFace, textCoords, position, adjacent_blocks.front);
+				tryAddFaceToMesh(backFace, textCoords, position, adjacent_blocks.back);
 			}
 }
 

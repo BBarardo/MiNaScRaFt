@@ -9,7 +9,4 @@ enum class CubeType
 	grass
 };
 
-
-
-
 #endif
