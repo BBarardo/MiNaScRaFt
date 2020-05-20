@@ -106,24 +106,13 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-
 	unsigned int cubemapTexture = loadCubemap(faces);
 	
 	Renderer renderer = Renderer();
 	World world = World(4);
-	
 
 	std::vector<Chunk> chunks = world.getChunks();
 	const int from = -3, to = 3;
-	//for (int x = from; x < to; ++x)
-	//{
-	//	for (int z = from; z < to; ++z)
-	//	{
-	//		Chunk chunk(glm::vec3(x, -1, z));
-	//		
-	//		chunks.push_back(chunk);
-	//	}
-	//}
 
 	for (auto && chunk : chunks)
 	{
@@ -139,21 +128,16 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
-		// --------------------
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		// input
-		// -----
 		processInput(window);
 
 		// render
-		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		
 
 		// Get MVP
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -164,8 +148,6 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, dirt);
 
 		renderer.setMatrix(projection,view,model);
-		//std::cout << "x-" << camera.Position.x
-		//	<< ", y-" << camera.Position.y << ", z-" << camera.Position.z <<"\n";
 		renderer.render(camera);
 
 		// draw skybox as last
@@ -174,6 +156,7 @@ int main()
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
 		skyboxShader.setMat4("projection", projection);
 		skyboxShader.setMat4("view", view);
+
 		// skybox cube
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -183,7 +166,6 @@ int main()
 		glDepthFunc(GL_LESS); // set depth function back to default
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
