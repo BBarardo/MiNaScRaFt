@@ -46,6 +46,5 @@ public:
 	std::vector<const ChunkMesh*> r_chunks;
 private:
 
-
 	Shader r_shader;
 };

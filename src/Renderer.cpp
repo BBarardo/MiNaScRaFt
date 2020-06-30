@@ -65,6 +65,3 @@ void Renderer::set_r_shader(const Shader& r_shader)
 {
 	this->r_shader = r_shader;
 }
-
-
-
