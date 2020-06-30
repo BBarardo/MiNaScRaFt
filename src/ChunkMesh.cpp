@@ -1,23 +1,30 @@
 ﻿#include "ChunkMesh.h"
 
 void ChunkMesh::addCubeFace(const std::vector<GLfloat>& cubeFace,
-                            const std::vector<float>& textureCoords,
+						    const std::vector<float>& norm, 
+						    const std::vector<float>& textureCoords,
                             const glm::vec3 chunkPos,
                             const glm::vec3& cubePosition)
 {
     auto& verticies = m_mesh.vertexPositions;
     auto& texCoords = m_mesh.textureCoords;
     auto& indices = m_mesh.indices;
+    auto& normals = m_mesh.normals;
 
     texCoords.insert(texCoords.end(), textureCoords.begin(), textureCoords.end());
 
     ///Vertex: The current vertex in the "blockFace" vector, 4 vertex in total hence "< 4"
 	///Index: X, Y, Z
-    for (int i = 0, index = 0; i < 4; ++i)
+    for (int i = 0, indexVert = 0, indexNorm = 0; i < 4; ++i)
     {
-        verticies.push_back(cubeFace[index++] + chunkPos.x * CHUNK_SIZE + cubePosition.x);
-        verticies.push_back(cubeFace[index++] + chunkPos.y * CHUNK_SIZE + cubePosition.y);
-        verticies.push_back(cubeFace[index++] + chunkPos.z * CHUNK_SIZE + cubePosition.z);
+        verticies.push_back(cubeFace[indexVert++] + chunkPos.x * CHUNK_SIZE + cubePosition.x);
+        verticies.push_back(cubeFace[indexVert++] + chunkPos.y * CHUNK_SIZE + cubePosition.y);
+        verticies.push_back(cubeFace[indexVert++] + chunkPos.z * CHUNK_SIZE + cubePosition.z);
+
+        normals.push_back(norm[indexNorm++]);
+        normals.push_back(norm[indexNorm++]);
+        normals.push_back(norm[indexNorm]);
+        indexNorm = 0;
     }
 
     indices.insert(indices.end(),

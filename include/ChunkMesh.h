@@ -15,6 +15,7 @@ public:
 	ChunkMesh() = default;
 
 	void addCubeFace(const std::vector<GLfloat>& cubeFace,
+		const std::vector<float>& norm,
 		const std::vector<float>& textureCoords,
 		const glm::vec3 chunkPos,
 		const glm::vec3& cubePosition);

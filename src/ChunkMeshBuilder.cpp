@@ -98,6 +98,12 @@ struct AdjacentBlockPositions
 	glm::vec3 back;
 };
 
+const std::vector<float> topNormal{ 0.0,  1.0,  0.0 };
+const std::vector<float> bottomNormal{ 0.0, -1.0,  0.0 };
+const std::vector<float> leftNormal{ -1.0,  0.0,  0.0 };
+const std::vector<float> rightNormal{ 1.0,  0.0,  0.0 };
+const std::vector<float> frontNormal{ 0.0,  0.0,  1.0 };
+const std::vector<float> backNormal{ 0.0,  0.0, -1.0 };
 int faces = 0;
 
 ChunkMeshBuilder::ChunkMeshBuilder(Chunk& chunk) : b_chunk(&chunk)
@@ -136,34 +142,35 @@ void ChunkMeshBuilder::build(ChunkMesh& mesh)
 				{
 					textCoords = textCoordsDirt;
 					//Up/ Down
-					tryAddFaceToMesh(topFace, textCoordsGrass, position, adjacent_blocks.up);
-					tryAddFaceToMesh(bottomFace, textCoords, position, adjacent_blocks.down);
+					tryAddFaceToMesh(topFace,topNormal, textCoordsGrass, position, adjacent_blocks.up);
+					tryAddFaceToMesh(bottomFace,bottomNormal, textCoords, position, adjacent_blocks.down);
 
 					//Left/ Right
-					tryAddFaceToMesh(leftFace, textCoordsSideGrass, position, adjacent_blocks.left);
-					tryAddFaceToMesh(rightFace, textCoordsSideGrass, position, adjacent_blocks.right);
+					tryAddFaceToMesh(leftFace,leftNormal, textCoordsSideGrass, position, adjacent_blocks.left);
+					tryAddFaceToMesh(rightFace,rightNormal, textCoordsSideGrass, position, adjacent_blocks.right);
 
 					//Front/ Back
-					tryAddFaceToMesh(frontFace, textCoordsSideGrass, position, adjacent_blocks.front);
-					tryAddFaceToMesh(backFace, textCoordsSideGrass, position, adjacent_blocks.back);
+					tryAddFaceToMesh(frontFace,frontNormal, textCoordsSideGrass, position, adjacent_blocks.front);
+					tryAddFaceToMesh(backFace,backNormal ,textCoordsSideGrass, position, adjacent_blocks.back);
 
 					continue;
 				}
 				//Up/ Down
-				tryAddFaceToMesh(topFace, textCoords, position, adjacent_blocks.up);
-				tryAddFaceToMesh(bottomFace, textCoords, position, adjacent_blocks.down);
+				tryAddFaceToMesh(topFace, topNormal, textCoords, position, adjacent_blocks.up);
+				tryAddFaceToMesh(bottomFace, bottomNormal, textCoords, position, adjacent_blocks.down);
 
 				//Left/ Right
-				tryAddFaceToMesh(leftFace, textCoords, position, adjacent_blocks.left);
-				tryAddFaceToMesh(rightFace, textCoords, position, adjacent_blocks.right);
+				tryAddFaceToMesh(leftFace, leftNormal, textCoords, position, adjacent_blocks.left);
+				tryAddFaceToMesh(rightFace, rightNormal, textCoords, position, adjacent_blocks.right);
 
 				//Front/ Back
-				tryAddFaceToMesh(frontFace, textCoords, position, adjacent_blocks.front);
-				tryAddFaceToMesh(backFace, textCoords, position, adjacent_blocks.back);
+				tryAddFaceToMesh(frontFace,frontNormal, textCoords, position, adjacent_blocks.front);
+				tryAddFaceToMesh(backFace,backNormal, textCoords, position, adjacent_blocks.back);
 			}
 }
 
 void ChunkMeshBuilder::tryAddFaceToMesh(const std::vector<float>& blockFace,
+	const std::vector<float>& normals,
 	const std::vector<float>& textureCoords,
 	const glm::vec3& blockPosition,
 	const glm::vec3& blockFacing)
@@ -173,7 +180,7 @@ void ChunkMeshBuilder::tryAddFaceToMesh(const std::vector<float>& blockFace,
 		faces++;
 		//auto texCoords = BlockDatabase::get().textureAtlas.getTexture(textureCoords);
 
-		b_mesh->addCubeFace(blockFace, textureCoords, b_chunk->getPos(), blockPosition);
+		b_mesh->addCubeFace(blockFace, normals, textureCoords, b_chunk->getPos(), blockPosition);
 	}
 }
 

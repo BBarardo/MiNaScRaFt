@@ -19,6 +19,7 @@ void Model::fill(Mesh& mesh)
 
 	addVBO(3, mesh.vertexPositions);
 	addVBO(2, mesh.textureCoords);
+	addVBO(3, mesh.normals);
 	addEBO(mesh.indices);
 }
 

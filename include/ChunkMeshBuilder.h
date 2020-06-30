@@ -28,6 +28,7 @@ class ChunkMeshBuilder
 	ChunkMesh * b_mesh = nullptr;
 
 	void tryAddFaceToMesh(const std::vector<float>& blockFace,
+						  const std::vector<float>& normals,
 						  const std::vector<float>& textureCoords,
 						  const glm::vec3& blockPosition,
 						  const glm::vec3& blockFacing);
