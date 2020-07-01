@@ -44,7 +44,9 @@ public:
 
 	void set_r_shader(const Shader& r_shader);
 	std::vector<const ChunkMesh*> r_chunks;
-private:
+public:
 
+	Shader getShader();
+private:
 	Shader r_shader;
 };

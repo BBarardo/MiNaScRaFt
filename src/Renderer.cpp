@@ -2,7 +2,8 @@
 
 
 
-Renderer::Renderer() : r_shader("shaders/shader.vs", "shaders/shader.fs") { }
+//Renderer::Renderer() : r_shader("shaders/shader.vs", "shaders/shader.fs") { }
+Renderer::Renderer() : r_shader("shaders/basic_lighting.vs", "shaders/basic_lighting.fs") { }
 
 Renderer::~Renderer() { }
 
@@ -64,4 +65,9 @@ void Renderer::setMatrix(glm::mat4 projection, glm::mat4 view, glm::mat4 model) 
 void Renderer::set_r_shader(const Shader& r_shader)
 {
 	this->r_shader = r_shader;
+}
+
+Shader Renderer::getShader()
+{
+	return r_shader;
 }

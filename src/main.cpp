@@ -33,12 +33,7 @@ int main()
 	GLFWwindow* window = initOpenGL();
 
 
-	//---------------------------------------------
-	// load textures (we now use a utility function to keep the code more organized)
-	// -----------------------------------------------------------------------------
-	int diffuseMap = loadTexture("textures/textures.png");
-	int specularMap = loadTexture("textures/textures_specular.png");
-
+	
 	float skyboxVertices[] = {
 		// positions          
 		-1.0f,  1.0f, -1.0f,
@@ -87,6 +82,7 @@ int main()
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
 	Shader lampShader("shaders/2.1.lamp.vs", "shaders/2.1.lamp.fs");
 
+
 	std::vector<std::string> faces
 	{
 		/*"textures/skybox/right.jpg",
@@ -119,6 +115,16 @@ int main()
 	World world = World(2);
 	player.set_world(world);
 
+	//---------------------------------------------
+	// load textures (we now use a utility function to keep the code more organized)
+	// -----------------------------------------------------------------------------
+	int diffuseMap = loadTexture("textures/textures.png");
+	int specularMap = loadTexture("textures/textures_specular.png");
+
+	renderer.getShader().setInt("material.diffuse", 0);
+
+	renderer.getShader().setInt("material.specular", 1);
+	
 	//---SOL---
 	//---------
 	//
@@ -214,6 +220,46 @@ int main()
 		if (!freeCamOn) {
 			player.update(deltaTime);
 		}
+
+		// be sure to activate shader when setting uniforms/drawing objects
+		renderer.getShader().use();
+		renderer.getShader().setVec3("viewPos", camera.Position);
+		renderer.getShader().setFloat("material.shininess", 32.0f);
+
+		// Lights
+		glm::vec3 lightColor = glm::vec3(1.0f);
+		glm::vec3 ambientColor = lightColor * glm::vec3(0.05f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
+		glm::vec3 specularColor = glm::vec3(1.0f);
+		float constantColor = 1.0f;
+		float linearColor = 0.9;
+		float quadraticColor = 0.032;
+
+		// directional light
+		renderer.getShader().setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+		renderer.getShader().setVec3("dirLight.ambient", ambientColor);
+		renderer.getShader().setVec3("dirLight.diffuse", diffuseColor);
+		renderer.getShader().setVec3("dirLight.specular", specularColor);
+		// point light 1
+		renderer.getShader().setVec3("pointLights[0].position", sunPos);
+		renderer.getShader().setVec3("pointLights[0].ambient", ambientColor);
+		renderer.getShader().setVec3("pointLights[0].diffuse", diffuseColor);
+		renderer.getShader().setVec3("pointLights[0].specular", specularColor);
+		renderer.getShader().setFloat("pointLights[0].constant", constantColor);
+		renderer.getShader().setFloat("pointLights[0].linear", linearColor);
+		renderer.getShader().setFloat("pointLights[0].quadratic", quadraticColor);
+		// spotLight
+		renderer.getShader().setVec3("spotLight.position", camera.Position);
+		renderer.getShader().setVec3("spotLight.direction", camera.Front);
+		renderer.getShader().setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+		renderer.getShader().setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+		renderer.getShader().setVec3("spotLight.ambient", ambientColor);
+		renderer.getShader().setVec3("spotLight.diffuse", diffuseColor);
+		renderer.getShader().setVec3("spotLight.specular", specularColor);
+		renderer.getShader().setFloat("spotLight.constant", constantColor);
+		renderer.getShader().setFloat("spotLight.linear", linearColor);
+		renderer.getShader().setFloat("spotLight.quadratic", quadraticColor);
+
 		
 		// Get MVP
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -237,8 +283,8 @@ int main()
 		//---Posicionamento da luz---
 		model = glm::mat4(1.0f);
 		//---Rotação da luz---
-		sunPos.x = 50.0f * (sin(glfwGetTime() * glm::radians(75.0)));
 		sunPos.y = 50.0f * (cos(glfwGetTime() * glm::radians(75.0)));
+		sunPos.x = 50.0f * (sin(glfwGetTime() * glm::radians(75.0)));
 		
 		model = glm::translate(model, sunPos);
 		model = glm::rotate(model, (float) (glfwGetTime() * glm::radians(75.0)), glm::vec3(0, 0, -1));
