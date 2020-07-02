@@ -2,9 +2,10 @@
 
 #include "Player.h"
 
-#include "GUI/imgui.h"
-#include "GUI/imgui_impl_glfw.h"
-#include "GUI/imgui_impl_opengl3.h"
+#include <GUI\imgui.h>
+#include <GUI\imgui_impl_glfw.h>
+#include <GUI\imgui_impl_opengl3.h>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, bool & freeCamOn);
@@ -205,6 +206,49 @@ int main()
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
+
+	//GUI
+	//----
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsClassic();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+
+	// Our state
+	bool show_demo_window = true;
+
+	float scaleGUI[4] = { 5.0f, 5.0f, 5.0f, 1.0f };
+	glm::vec3 scale(5.0f);
+
+	ImVec4 lightColorGUI = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightColor = glm::vec3(1.0f);
+
+	float specularStrength = 0.5f;
+	float shininess = 32.0f;
+
+	float lightSpeed = 1.0f;
+	bool sunRotate = true;
+	float lighStrenght = 100;
+
+
+
+	// Lights
+	//------------
+	glm::vec3 ambientColor = lightColor * glm::vec3(0.05f);
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
+	glm::vec3 specularColor = glm::vec3(1.0f);
+	float constantColor = 1.0f;
+	float linearColor = 0.9;
+	float quadraticColor = 0.032;
+	
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -214,6 +258,12 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		//GUI
+		// Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		
 		// input
 		processInput(window,freeCamOn);
 
@@ -229,16 +279,9 @@ int main()
 		// be sure to activate shader when setting uniforms/drawing objects
 		renderer.getShader().use();
 		renderer.getShader().setVec3("viewPos", camera.Position);
-		renderer.getShader().setFloat("material.shininess", 32.0f);
+		renderer.getShader().setFloat("material.shininess", shininess);
 
-		// Lights
-		glm::vec3 lightColor = glm::vec3(1.0f);
-		glm::vec3 ambientColor = lightColor * glm::vec3(0.05f);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.8f);
-		glm::vec3 specularColor = glm::vec3(1.0f);
-		float constantColor = 1.0f;
-		float linearColor = 0.9;
-		float quadraticColor = 0.032;
+
 
 		// directional light
 		renderer.getShader().setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -248,7 +291,7 @@ int main()
 		// point light 1
 		renderer.getShader().setVec3("pointLights[0].position", sunPos);
 		renderer.getShader().setVec3("pointLights[0].ambient", ambientColor);
-		renderer.getShader().setVec3("pointLights[0].diffuse", diffuseColor * 100.0f);
+		renderer.getShader().setVec3("pointLights[0].diffuse", lightColor * lighStrenght);
 		renderer.getShader().setVec3("pointLights[0].specular", specularColor);
 		renderer.getShader().setFloat("pointLights[0].constant", constantColor);
 		renderer.getShader().setFloat("pointLights[0].linear", linearColor);
@@ -284,16 +327,22 @@ int main()
 		lampShader.use();
 		lampShader.setMat4("view", view);
 		lampShader.setMat4("projection", projection);
-		
+		lampShader.setVec3("lightColor", lightColor);
+
 		//---Posicionamento da luz---
 		model = glm::mat4(1.0f);
 		//---Rotação da luz---
-		sunPos.x = 50.0f * (sin(glfwGetTime() * glm::radians(75.0)));
-		sunPos.y = 50.0f * (cos(glfwGetTime() * glm::radians(75.0)));
-		
+		if(lightSpeed != 0.0f)
+		{
+			sunPos.x = 50.0f * (sin(glfwGetTime() * glm::radians(lightSpeed * 75.0)));
+			sunPos.y = 50.0f * (cos(glfwGetTime() * glm::radians(lightSpeed * 75.0)));
+			sunPos.z = 0;
+		}
 		model = glm::translate(model, sunPos);
-		model = glm::rotate(model, (float) (glfwGetTime() * glm::radians(75.0)), glm::vec3(0, 0, -1));
-		model = glm::scale(model, glm::vec3(5,5,5));
+		if (sunRotate){
+			model = glm::rotate(model, (float) (glfwGetTime() * glm::radians(75.0)), glm::vec3(0, 0, -1));
+		}
+		model = glm::scale(model, scale);
 		lampShader.setMat4("model", model);
 
 		glBindVertexArray(lightVAO);
@@ -314,12 +363,66 @@ int main()
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS); // set depth function back to default
 
+
+
+
+
+		//---GUI Window---
+		//----------------
+		float lightPosGUI[4] = { sunPos.x, sunPos.y, sunPos.z,1.0f };
+
+		if (show_demo_window)
+			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+		{
+
+			ImGui::Begin("Painel");                          // Create a window called "Painel" and append into it.
+			ImGui::SliderFloat3("Object scale", scaleGUI, 0.0f, 2.0f);
+			ImGui::ColorEdit3("Light color", (float*)&lightColorGUI); // Edit 3 floats representing a color
+			ImGui::SliderFloat("Specular strength", &specularStrength, 0.0f, 1.0f);
+			ImGui::SliderFloat("Shininess", &shininess, 2.0f, 256.0f);
+			ImGui::SliderFloat3("Light Position", lightPosGUI, -100, 100);
+			ImGui::SliderFloat("Light Speed", &lightSpeed, 0.0f, 10.0f);
+			ImGui::SliderFloat("Light Strenght", &lighStrenght, 0.0f, 200.0f);
+			ImGui::Checkbox("Sun Rotation", &sunRotate);
+
+			if (ImGui::Button("Reset")) {							// Buttons return true when clicked (most widgets return true when edited/activated)
+				lightColor = glm::vec3(1.0f);
+				ambientColor = lightColor * glm::vec3(0.05f);
+				diffuseColor = lightColor * glm::vec3(0.8f);
+				specularColor = glm::vec3(1.0f);
+				constantColor = 1.0f;
+				linearColor = 0.9;
+				quadraticColor = 0.032;
+				lightSpeed = 1.0f;
+				sunRotate = true;
+				lighStrenght = 100;
+			}
+			//ImGui::SameLine();
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+		//traduçao do IMGUI para gl
+		scale = glm::vec3(scaleGUI[0], scaleGUI[1], scaleGUI[2]);
+		lightColor = glm::vec4(lightColorGUI.x, lightColorGUI.y, lightColorGUI.z, lightColorGUI.w);
+		sunPos = glm::vec3(lightPosGUI[0], lightPosGUI[1], lightPosGUI[2]);
+
+		
+		// Rendering----GUI----
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+
+	// Cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+	
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
 
@@ -430,20 +533,23 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (firstMouse)
-	{
+	if (procMouse) {
+
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos;
+
 		lastX = xpos;
 		lastY = ypos;
-		firstMouse = false;
+
+		camera.ProcessMouseMovement(xoffset, yoffset);
 	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called

@@ -153,6 +153,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\GUI\imgui.cpp" />
+    <ClCompile Include="include\GUI\imgui_demo.cpp" />
+    <ClCompile Include="include\GUI\imgui_draw.cpp" />
+    <ClCompile Include="include\GUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="include\GUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="include\GUI\imgui_widgets.cpp" />
     <ClCompile Include="src\World.cpp" />
     <ClCompile Include="src\ChunkMesh.cpp" />
     <ClCompile Include="src\ChunkMeshBuilder.cpp" />
@@ -247,6 +253,14 @@
     <ClInclude Include="include\Chunk.h" />
     <ClInclude Include="include\Cube.h" />
     <ClInclude Include="include\GLCore.h" />
+    <ClInclude Include="include\GUI\imconfig.h" />
+    <ClInclude Include="include\GUI\imgui.h" />
+    <ClInclude Include="include\GUI\imgui_impl_glfw.h" />
+    <ClInclude Include="include\GUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\GUI\imgui_internal.h" />
+    <ClInclude Include="include\GUI\imstb_rectpack.h" />
+    <ClInclude Include="include\GUI\imstb_textedit.h" />
+    <ClInclude Include="include\GUI\imstb_truetype.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\Model.hpp" />
     <ClInclude Include="include\Player.h" />
