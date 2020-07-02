@@ -2,6 +2,9 @@
 
 #include "Player.h"
 
+#include "GUI/imgui.h"
+#include "GUI/imgui_impl_glfw.h"
+#include "GUI/imgui_impl_opengl3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, bool & freeCamOn);
@@ -10,6 +13,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadTexture(char const* path);
 unsigned int loadCubemap(std::vector<std::string> faces);
 GLFWwindow* initOpenGL();
+
+bool procMouse = true;
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -238,12 +243,12 @@ int main()
 		// directional light
 		renderer.getShader().setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
 		renderer.getShader().setVec3("dirLight.ambient", ambientColor);
-		renderer.getShader().setVec3("dirLight.diffuse", diffuseColor);
+		renderer.getShader().setVec3("dirLight.diffuse", diffuseColor * 0.3f);
 		renderer.getShader().setVec3("dirLight.specular", specularColor);
 		// point light 1
 		renderer.getShader().setVec3("pointLights[0].position", sunPos);
 		renderer.getShader().setVec3("pointLights[0].ambient", ambientColor);
-		renderer.getShader().setVec3("pointLights[0].diffuse", diffuseColor);
+		renderer.getShader().setVec3("pointLights[0].diffuse", diffuseColor * 100.0f);
 		renderer.getShader().setVec3("pointLights[0].specular", specularColor);
 		renderer.getShader().setFloat("pointLights[0].constant", constantColor);
 		renderer.getShader().setFloat("pointLights[0].linear", linearColor);
@@ -251,13 +256,13 @@ int main()
 		// spotLight
 		renderer.getShader().setVec3("spotLight.position", camera.Position);
 		renderer.getShader().setVec3("spotLight.direction", camera.Front);
+		renderer.getShader().setVec3("spotLight.ambient", ambientColor);
 		renderer.getShader().setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 		renderer.getShader().setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
-		renderer.getShader().setVec3("spotLight.ambient", ambientColor);
 		renderer.getShader().setVec3("spotLight.diffuse", diffuseColor);
 		renderer.getShader().setVec3("spotLight.specular", specularColor);
 		renderer.getShader().setFloat("spotLight.constant", constantColor);
-		renderer.getShader().setFloat("spotLight.linear", linearColor);
+		renderer.getShader().setFloat("spotLight.linear", linearColor * 0.5f);
 		renderer.getShader().setFloat("spotLight.quadratic", quadraticColor);
 
 		
@@ -283,8 +288,8 @@ int main()
 		//---Posicionamento da luz---
 		model = glm::mat4(1.0f);
 		//---Rotação da luz---
-		sunPos.y = 50.0f * (cos(glfwGetTime() * glm::radians(75.0)));
 		sunPos.x = 50.0f * (sin(glfwGetTime() * glm::radians(75.0)));
+		sunPos.y = 50.0f * (cos(glfwGetTime() * glm::radians(75.0)));
 		
 		model = glm::translate(model, sunPos);
 		model = glm::rotate(model, (float) (glfwGetTime() * glm::radians(75.0)), glm::vec3(0, 0, -1));
@@ -309,6 +314,7 @@ int main()
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS); // set depth function back to default
 
+		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -364,6 +370,15 @@ void processInput(GLFWwindow* window, bool & freeCamOn)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT)) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		procMouse = false;
+	}
+	else {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		procMouse = true;
+	}
+	
 	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
 		if (freeCamOn) {
 			freeCamOn = false;
