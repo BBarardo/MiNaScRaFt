@@ -40,7 +40,8 @@ struct PointLight {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-};  
+};
+
 #define NR_POINT_LIGHTS 1
 
 in vec3 FragPos;  
