@@ -18,8 +18,8 @@ GLFWwindow* initOpenGL();
 bool procMouse = true;
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1000;
+const unsigned int SCR_HEIGHT = 700;
 
 // camera
 Camera camera(glm::vec3(0.0f, 2.0f, 0.0f));
@@ -86,7 +86,7 @@ int main()
 	};
 
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.fs");
-	Shader lampShader("shaders/2.1.lamp.vs", "shaders/2.1.lamp.fs");
+	Shader lampShader("shaders/lamp.vs", "shaders/lamp.fs");
 
 
 	std::vector<std::string> faces
@@ -224,7 +224,10 @@ int main()
 
 	// Our state
 	bool show_demo_window = true;
-
+	bool show_sun_window = false;
+	bool show_directional_light_window = false;
+	bool show_flash_light_window = false;
+	
 	float scaleGUI[4] = { 5.0f, 5.0f, 5.0f, 1.0f };
 	glm::vec3 scale(5.0f);
 
@@ -238,8 +241,18 @@ int main()
 	bool sunRotate = true;
 	float lighStrenght = 100;
 
+	ImVec4 dirLightColorGUI = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	float dirLighStrenght = 0.2f;
+
+	glm::vec3 dirLightColor(1.0);
 
 
+	ImVec4 flashLightColorGUI = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 flashLightColor(1.0);
+	
+	float flashLighStrenght = 0.5;
+	float spotCutoff = 12.5f;
+	
 	// Lights
 	//------------
 	glm::vec3 ambientColor = lightColor * glm::vec3(0.05f);
@@ -285,27 +298,27 @@ int main()
 
 		// directional light
 		renderer.getShader().setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-		renderer.getShader().setVec3("dirLight.ambient", ambientColor);
-		renderer.getShader().setVec3("dirLight.diffuse", diffuseColor * 0.3f);
-		renderer.getShader().setVec3("dirLight.specular", specularColor);
+		renderer.getShader().setVec3("dirLight.ambient", dirLightColor * 0.05f);
+		renderer.getShader().setVec3("dirLight.diffuse", diffuseColor * dirLighStrenght);
+		renderer.getShader().setVec3("dirLight.specular", specularColor * dirLighStrenght);
 		// point light 1
 		renderer.getShader().setVec3("pointLights[0].position", sunPos);
 		renderer.getShader().setVec3("pointLights[0].ambient", ambientColor);
 		renderer.getShader().setVec3("pointLights[0].diffuse", lightColor * lighStrenght);
-		renderer.getShader().setVec3("pointLights[0].specular", specularColor);
+		renderer.getShader().setVec3("pointLights[0].specular", specularColor * specularStrength);
 		renderer.getShader().setFloat("pointLights[0].constant", constantColor);
 		renderer.getShader().setFloat("pointLights[0].linear", linearColor);
 		renderer.getShader().setFloat("pointLights[0].quadratic", quadraticColor);
-		// spotLight
+		// spotLight6
 		renderer.getShader().setVec3("spotLight.position", camera.Position);
 		renderer.getShader().setVec3("spotLight.direction", camera.Front);
-		renderer.getShader().setVec3("spotLight.ambient", ambientColor);
-		renderer.getShader().setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-		renderer.getShader().setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+		renderer.getShader().setVec3("spotLight.ambient", flashLightColor);
+		renderer.getShader().setFloat("spotLight.cutOff", glm::cos(glm::radians(spotCutoff)));
+		renderer.getShader().setFloat("spotLight.outerCutOff", glm::cos(glm::radians(spotCutoff + 3.0)));
 		renderer.getShader().setVec3("spotLight.diffuse", diffuseColor);
 		renderer.getShader().setVec3("spotLight.specular", specularColor);
 		renderer.getShader().setFloat("spotLight.constant", constantColor);
-		renderer.getShader().setFloat("spotLight.linear", linearColor * 0.5f);
+		renderer.getShader().setFloat("spotLight.linear", linearColor * flashLighStrenght);
 		renderer.getShader().setFloat("spotLight.quadratic", quadraticColor);
 
 		
@@ -375,15 +388,18 @@ int main()
 			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 		{
 
-			ImGui::Begin("Painel");                          // Create a window called "Painel" and append into it.
-			ImGui::SliderFloat3("Object scale", scaleGUI, 0.0f, 2.0f);
-			ImGui::ColorEdit3("Light color", (float*)&lightColorGUI); // Edit 3 floats representing a color
-			ImGui::SliderFloat("Specular strength", &specularStrength, 0.0f, 1.0f);
+			ImGui::Begin("General Painel");                          // Create a window called "Painel" and append into it.
+			ImGui::Text("Windows are resizable be shure to see every option");
+			ImGui::Text("Press ALT to interact with this window");
+			ImGui::Text("Press F to enable wireframe (G to disable)");
+			ImGui::Text("Press U to enable fly mode");
+			ImGui::Text("mouse weel to zoom in/out");
+			ImGui::Checkbox("Sun", &show_sun_window);
+			ImGui::Checkbox("Directional Light", &show_directional_light_window);
+			ImGui::Checkbox("Flashlight", &show_flash_light_window);
+		
+			ImGui::SliderFloat("Specular strength", &specularStrength, 0.0f, 2.0f);
 			ImGui::SliderFloat("Shininess", &shininess, 2.0f, 256.0f);
-			ImGui::SliderFloat3("Light Position", lightPosGUI, -100, 100);
-			ImGui::SliderFloat("Light Speed", &lightSpeed, 0.0f, 10.0f);
-			ImGui::SliderFloat("Light Strenght", &lighStrenght, 0.0f, 200.0f);
-			ImGui::Checkbox("Sun Rotation", &sunRotate);
 
 			if (ImGui::Button("Reset")) {							// Buttons return true when clicked (most widgets return true when edited/activated)
 				lightColor = glm::vec3(1.0f);
@@ -396,17 +412,59 @@ int main()
 				lightSpeed = 1.0f;
 				sunRotate = true;
 				lighStrenght = 100;
+				dirLightColorGUI = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+				dirLighStrenght = 0.2f;
+				flashLightColorGUI = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+				flashLighStrenght = 0.5f;
+				spotCutoff = 12.5;
 			}
 			//ImGui::SameLine();
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+
+		if (show_sun_window)
+		{
+			ImGui::Begin("Sun", &show_sun_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+
+			ImGui::SliderFloat3("Object scale", scaleGUI, 0.0f, 2.0f);
+			ImGui::SliderFloat3("Light Position", lightPosGUI, -100, 100);
+			ImGui::ColorEdit3("Light color", (float*)&lightColorGUI); // Edit 3 floats representing a color
+			ImGui::SliderFloat("Light Speed", &lightSpeed, 0.0f, 10.0f);
+			ImGui::SliderFloat("Light Strenght", &lighStrenght, 0.0f, 200.0f);
+			ImGui::Checkbox("Sun Rotation", &sunRotate);
+
+			ImGui::End();
+		}
+
+		if (show_directional_light_window)
+		{
+			ImGui::Begin("Directional Light", &show_directional_light_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+
+			ImGui::ColorEdit3("Light color", (float*)&dirLightColorGUI); // Edit 3 floats representing a color
+			ImGui::SliderFloat("Light Strenght", &dirLighStrenght, 0.0f, 10.0f);
+
+			ImGui::End();
+		}
+
+		if (show_flash_light_window)
+		{
+			ImGui::Begin("Flashlight", &show_flash_light_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+
+			ImGui::ColorEdit3("Light color", (float*)&flashLightColorGUI); // Edit 3 floats representing a color
+			ImGui::SliderFloat("Light Strenght", &flashLighStrenght, -0.255f, 1.0f);
+			ImGui::SliderFloat("spotlight cutoff", &spotCutoff, 0.0f, 25.0f);
+
+			ImGui::End();
+		}
+		
 		//traduçao do IMGUI para gl
 		scale = glm::vec3(scaleGUI[0], scaleGUI[1], scaleGUI[2]);
-		lightColor = glm::vec4(lightColorGUI.x, lightColorGUI.y, lightColorGUI.z, lightColorGUI.w);
 		sunPos = glm::vec3(lightPosGUI[0], lightPosGUI[1], lightPosGUI[2]);
-
+		lightColor = glm::vec4(lightColorGUI.x, lightColorGUI.y, lightColorGUI.z, lightColorGUI.w);
+		dirLightColor = glm::vec4(dirLightColorGUI.x, dirLightColorGUI.y, dirLightColorGUI.z, dirLightColorGUI.w);
+		flashLightColor = glm::vec4(flashLightColorGUI.x, flashLightColorGUI.y, flashLightColorGUI.z, flashLightColorGUI.w);
 		
 		// Rendering----GUI----
 		ImGui::Render();
